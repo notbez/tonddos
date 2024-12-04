@@ -123,6 +123,29 @@ app.get("/leaderboard", (req, res) => {
     });
 });
 
+const TelegramBot = require('node-telegram-bot-api');
+
+// Укажите ваш API ключ для бота
+const bot = new TelegramBot('YOUR_BOT_API_KEY', { polling: true });
+
+// При получении команды /start от пользователя, отправляем кнопку для открытия мини-приложения
+bot.onText(/\/start/, (msg) => {
+    const chatId = msg.chat.id;
+
+    const options = {
+        reply_markup: {
+            inline_keyboard: [
+                [{
+                    text: 'Open MiniApp',  // Текст кнопки
+                    web_app: { url: 'https://your-app-name.onrender.com' }  // URL вашего мини-приложения
+                }]
+            ]
+        }
+    };
+
+    bot.sendMessage(chatId, 'Welcome to the bot! Click below to open the mini app:', options);
+});
+
 // Запуск сервера
 const PORT = 3000;
 app.listen(PORT, () => {
